@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Youtube HTML5</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+    <script src="/js/firebase.js"></script>
+</head>
+<body>
+<div class="container-fluid p-top">
+    <div class="row">
+        <div class="col-7"></div>
+        <div class="col-4">
+            <div class="float-right p-1 mb-2 content">
+                <!-- <button class="button login" onclick="GoogleApiLogin();">로그인</button>
+                <button class="button logout" onclick="Logout();">로그아웃</button> -->
+                <div class="login">
+                    <a onclick="GoogleApiLogin();">로그인</a>
+                </div>
+                <div class="logout">
+                    <span><span class="username"></span>님 환영합니다!</span>
+                    <a class="content" onclick="Logout();">로그아웃</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col content p-2">
+            <div class="youtube-player">
+                <iframe id="ytplayer" class="youtube-player" type="text/html"
+                        src="https://www.youtube.com/embed/{{ vid }}?autoplay=1&controls=0&enablejsapi=1&rel=0"
+                        frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="col-4" style="padding-left: 0;padding-right: 0;">
+            <div class="w100p h100p">
+                <iframe class="youtube-chat content p-top p-bot p-left p-right w100p float-right"
+                        src="https://www.youtube.com/live_chat?v={{ vid }}&embed_domain={{ domain }}"
+                        frameborder="0"></iframe>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-1">
+            <div class="volume" title="Set volume">
+                <span class="volumeBar"></span>
+            </div>
+        </div>
+    </div>
+    <p class="whitespace"><!-- WhiteSpace --></p>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col content p-10">
+            <dl id="video-title">여기에 방송제목</dl>
+            <div class="m-left">
+                <p class="song-now">여기에 현재곡</p>
+                <p class="song-prev">여기에 이전곡</p>
+                <p class="song-prev">여기에 이전곡</p>
+                <p class="song-prev">여기에 이전곡</p>
+                <p class="song-prev">여기에 이전곡</p>
+                <p class="song-prev">여기에 이전곡</p>
+                <p class="song-prev">여기에 이전곡</p>
+                <p class="song-prev">...</p>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</div>
+</body>
+<!-- BootStrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
+      integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+
+<!-- BootStrap Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"
+        integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4"
+        crossorigin="anonymous"></script>
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="/css/index.css?v={{ version }}"/>
+
+<!-- Custom Scripts -->
+<script src="/js/index.js"></script>
+
+<script>
+    var frame = $("iframe#ytplayer");
+    var vid = "{{ vid }}";
+    var youtubeAPIKey = "{{ YoutubeAPIKey }}";
+
+    function setTitle() {
+        var video_title = document.getElementById("video-title");
+
+        $.get("https://www.googleapis.com/youtube/v3/videos?id=" + vid + "&key="+youtubeAPIKey+"&fields=items(snippet(title))&part=snippet", function (resp) {
+            console.log(resp.items[0].snippet.title);
+            video_title.innerHTML = resp.items[0].snippet.title;
+        });
+    }
+
+    $(window).ready(function () {
+        var newWidth = frame.width();
+
+        frame.height(newWidth * 1080 / 1920);
+
+        setTitle();
+    });
+    $(window).resize(function () {
+        var newWidth = frame.width();
+
+        frame.height(newWidth * 1080 / 1920);
+    });
+
+    refreshAuthButton();
+
+</script>
+</html>
