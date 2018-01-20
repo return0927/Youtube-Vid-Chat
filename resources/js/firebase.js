@@ -69,10 +69,17 @@ function refreshAuthButton() {
     }
 }
 
-function loadData(vid) {
+function getChatting(vid) {
     var dbRef = firebase.database().ref(vid);
-    ;
     dbRef.on("child_added", function (data) {
-        console.log(data.val());
+        data.val();
     })
+}
+
+function loadData(vid) {
+    var dbRef = firebase.database().ref(vid), ret;
+    dbRef.on("value", function(data){
+        ret = data;
+    });
+    return ret;
 }
