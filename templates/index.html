@@ -38,11 +38,15 @@
                         frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
-        <div class="col-4" style="padding-left: 0;padding-right: 0;">
+        <div class="col-1"><!-- Whitespace --></div>
+        <div class="col-3" style="padding-left: 0;padding-right: 0;">
             <div class="w100p h100p">
-                <iframe class="youtube-chat content p-top p-bot p-left p-right w100p float-right"
+                <iframe class="youtube-chat content p-1 w100p float-right"
                         src="https://www.youtube.com/live_chat?v={{ vid }}&embed_domain={{ domain }}"
                         frameborder="0"></iframe>
+                <div class="CustomChatting content w100p h100p p-1" style="display: none;">
+                    <span>CustomChat</span>
+                </div>
             </div>
         </div>
         <div class="col-1"></div>
@@ -98,21 +102,16 @@
     var vid = "{{ vid }}";
     var youtubeAPIKey = "{{ YoutubeAPIKey }}";
 
-    function setTitle() {
-        var video_title = document.getElementById("video-title");
-
-        $.get("https://www.googleapis.com/youtube/v3/videos?id=" + vid + "&key="+youtubeAPIKey+"&fields=items(snippet(title))&part=snippet", function (resp) {
-            console.log(resp.items[0].snippet.title);
-            video_title.innerHTML = resp.items[0].snippet.title;
-        });
-    }
-
     $(window).ready(function () {
         var newWidth = frame.width();
 
         frame.height(newWidth * 1080 / 1920);
 
-        setTitle();
+        setTitle(vid, youtubeAPIKey);
+        refreshAuthButton();
+
+        checkLive();
+        getChatting(vid);
     });
     $(window).resize(function () {
         var newWidth = frame.width();
